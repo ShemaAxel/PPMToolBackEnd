@@ -19,7 +19,7 @@ public class Project {
 
 	@Id
 	@GeneratedValue(strategy =GenerationType.IDENTITY)
-	private Long id;
+	private Long id;  
 	@NotBlank(message ="Project name is required")
 	private String projectName;
 	@NotBlank(message ="Project Identifier is required")
@@ -32,7 +32,7 @@ public class Project {
 	private Date start_date;
 	@JsonFormat(pattern="yyyy-mm-dd")
 	private Date end_date;
-	
+	 
 	@JsonFormat(pattern="yyyy-mm-dd")
 	private Date created_At;
 	@JsonFormat(pattern="yyyy-mm-dd")

@@ -6,7 +6,10 @@ import org.springframework.stereotype.Repository;
 import com.ppm.demo.domain.Project;
 
 @Repository
-public interface ProjectRepository extends CrudRepository<Project,Long>{
-//	@Override
-//	Iterable<Project> findAllById(Iterable<Long> iterable);
+public interface ProjectRepository extends CrudRepository<Project, Long> {
+
+	Project findByProjectIdentifier(String projectId);
+
+	@Override
+	Iterable<Project> findAll();
 }
