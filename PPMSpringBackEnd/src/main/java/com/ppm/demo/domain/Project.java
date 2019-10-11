@@ -16,6 +16,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity 
 public class Project {
@@ -45,7 +46,7 @@ public class Project {
 	//cascade meaning project project is the owning side of the backlog,delete project all backlog are gone
 	//infinite recursin for json request
 	@OneToOne(fetch =FetchType.EAGER,cascade=CascadeType.ALL,mappedBy="project")
-	//
+	@JsonIgnore//in order to not have all the sub-entities that depends on this entity
 	private Backlog backlog;
 	
 	

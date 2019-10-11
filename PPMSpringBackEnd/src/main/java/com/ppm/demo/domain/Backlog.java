@@ -31,7 +31,9 @@ public class Backlog {
 	private Project project;
 
 	// OneToMany projecttasks
-	@OneToMany(fetch =FetchType.EAGER,cascade=CascadeType.ALL,mappedBy="backlog")
+	//READ about all 	@OneToMany(fetch =FetchType.EAGER,cascade=CascadeType.REFRESH,mappedBy="backlog",orphanRemoval=true)//orphane removal n refresh to remove the child object or task 
+	//to unerstand
+	@OneToMany(fetch =FetchType.EAGER,cascade=CascadeType.REFRESH,mappedBy="backlog",orphanRemoval=true)//orphane removal n refresh to remove the child object or task 
 	private List<ProjectTask> projectTasks = new ArrayList<>();
 
 	public Project getProject() {
