@@ -57,31 +57,30 @@ public class BacklogController {
 	@GetMapping("/{backlog_id}/{sequenceID}")
 	public ResponseEntity<?> getProjectTaskBySequeneOrder(@PathVariable String sequenceID,
 			@PathVariable String backlog_id) {
-		ProjectTask projectTask =projectTaskService.findBacklogByProjectSequence(backlog_id.toUpperCase(),sequenceID.toUpperCase());
-		
-		return new ResponseEntity<ProjectTask>(projectTask,HttpStatus.OK);
+		ProjectTask projectTask = projectTaskService.findBacklogByProjectSequence(backlog_id.toUpperCase(),
+				sequenceID.toUpperCase());
+
+		return new ResponseEntity<ProjectTask>(projectTask, HttpStatus.OK);
 
 	}
-	
+
 	@PatchMapping("/{backlog_id}/{sequenceID}")
-	public ResponseEntity<?> updateProjectTask(@Valid @RequestBody ProjectTask projectTask,
-			BindingResult result,@PathVariable String backlog_id,@PathVariable String sequenceID){
-		
+	public ResponseEntity<?> updateProjectTask(@Valid @RequestBody ProjectTask projectTask, BindingResult result,
+			@PathVariable String backlog_id, @PathVariable String sequenceID) {
+
 		ResponseEntity<?> errorMap = mapValidationErrorService.MapValidationService(result);
-		if(errorMap!=null)
+		if (errorMap != null)
 			return errorMap;
 		ProjectTask projectTask1 = projectTaskService.updateByProjectSequence(projectTask, backlog_id, sequenceID);
-		return new ResponseEntity<ProjectTask>(projectTask1,HttpStatus.OK);
-		
+		return new ResponseEntity<ProjectTask>(projectTask1, HttpStatus.OK);
+
 	}
 
 	@DeleteMapping("/{backlog_id}/{sequenceID}")
-	public ResponseEntity<?> deleteProjectTask(@PathVariable String backlog_id,@PathVariable String sequenceID){
+	public ResponseEntity<?> deleteProjectTask(@PathVariable String backlog_id, @PathVariable String sequenceID) {
 		projectTaskService.deleteProjectTask(backlog_id, sequenceID);
-		return new ResponseEntity<String>("ProjectTask with '"+sequenceID+"' was delete successfully.",HttpStatus.OK);
+		return new ResponseEntity<String>("ProjectTask with '" + sequenceID + "' was delete successfully.",
+				HttpStatus.OK);
 	}
-	
-	
-	
-	
+
 }

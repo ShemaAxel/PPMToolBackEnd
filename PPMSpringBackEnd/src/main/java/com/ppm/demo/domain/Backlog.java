@@ -30,10 +30,23 @@ public class Backlog {
 				// ('Bad String{Error}')
 	private Project project;
 
-	// OneToMany projecttasks
-	//READ about all 	@OneToMany(fetch =FetchType.EAGER,cascade=CascadeType.REFRESH,mappedBy="backlog",orphanRemoval=true)//orphane removal n refresh to remove the child object or task 
-	//to unerstand
-	@OneToMany(fetch =FetchType.EAGER,cascade=CascadeType.REFRESH,mappedBy="backlog",orphanRemoval=true)//orphane removal n refresh to remove the child object or task 
+	/*
+	 * OneToMany projecttasks READ about all @OneToMany(fetch
+	 * =FetchType.EAGER,cascade=CascadeType.REFRESH,mappedBy="backlog",orphanRemoval
+	 * =true)//orphane removal n refresh to remove the child object or task to
+	 * unerstand
+	 */
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH, mappedBy = "backlog", orphanRemoval = true) // orphane
+																													// removal
+																													// n
+																													// refresh
+																													// to
+																													// remove
+																													// the
+																													// child
+																													// object
+																													// or
+																													// task
 	private List<ProjectTask> projectTasks = new ArrayList<>();
 
 	public Project getProject() {

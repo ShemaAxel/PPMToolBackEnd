@@ -1,14 +1,15 @@
 package com.ppm.demo.services;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ppm.demo.domain.Backlog;
 import com.ppm.demo.domain.Project;
+import com.ppm.demo.domain.User;
 import com.ppm.demo.exceptions.ProjectIdException;
 import com.ppm.demo.repositories.BacklogRepository;
 import com.ppm.demo.repositories.ProjectRepository;
+import com.ppm.demo.repositories.UserRepository;
 
 @Service
 public class ProjectService {
@@ -18,24 +19,29 @@ public class ProjectService {
 
 	@Autowired
 	private BacklogRepository backlogRepository;
-	public Project saveOrUpdateProject(Project project) {
-		// logic
+
+	@Autowired
+	private UserRepository userRepository;
+
+	public Project saveOrUpdateProject(Project project, String username) {
 		try {
+
+			User user = userRepository.findByUsername(username);
+			project.setUser(user);
+			project.setProjectLeader(user.getUsername());
 			project.setProjectIdentifier(project.getProjectIdentifier().toUpperCase());
-			
-			//create ,backlog when project created
-			if(project.getId()==null) {
+
+			if (project.getId() == null) {
 				Backlog backlog = new Backlog();
-				//settin relationship
-				backlog.setProjectIdentifier(project.getProjectIdentifier().toUpperCase()); 
+				backlog.setProjectIdentifier(project.getProjectIdentifier().toUpperCase());
 				backlog.setProject(project);
 				project.setBacklog(backlog);
 			}
-			//update we dont lose backlog details
-			if(project.getId()!=null) {
-				project.setBacklog(backlogRepository.findByProjectIdentifier(project.getProjectIdentifier().toUpperCase()));
+			if (project.getId() != null) {
+				project.setBacklog(
+						backlogRepository.findByProjectIdentifier(project.getProjectIdentifier().toUpperCase()));
 			}
-			
+
 			return projectRepository.save(project);
 		} catch (Exception e) {
 			throw new ProjectIdException(
@@ -63,7 +69,5 @@ public class ProjectService {
 
 		projectRepository.delete(project);
 	}
-	
-	
 
 }

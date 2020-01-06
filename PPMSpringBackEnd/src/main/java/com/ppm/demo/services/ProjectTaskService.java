@@ -7,11 +7,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.DeleteMapping;
 
 import com.ppm.demo.domain.Backlog;
+import com.ppm.demo.domain.Project;
 import com.ppm.demo.domain.ProjectTask;
 import com.ppm.demo.exceptions.ProjectIdException;
 import com.ppm.demo.exceptions.ProjectNotFoundException;
 import com.ppm.demo.exceptions.ProjectTaskNotFound;
 import com.ppm.demo.repositories.BacklogRepository;
+import com.ppm.demo.repositories.ProjectRepository;
 import com.ppm.demo.repositories.ProjectTaskRepository;
 
 @Service
@@ -21,6 +23,8 @@ public class ProjectTaskService {
 
 	@Autowired
 	private ProjectTaskRepository projectTaskRepository;
+	@Autowired
+	private ProjectRepository projectRepository;
 
 	public ProjectTask addProjectTask(String projectIdentifier, ProjectTask projectTask) {
 
@@ -38,14 +42,13 @@ public class ProjectTaskService {
 			projectTask.setProjectSequence(projectIdentifier + "-" + BacklogSequence);
 			projectTask.setProjectIdentifier(projectIdentifier);
 			// set priority
-			if (projectTask.getPriority() == null) {
+			if (projectTask.getPriority() == 0 || projectTask.getPriority() == null) {
 				projectTask.setPriority(3);
 			}
 			// set status
 			if (projectTask.getStatus() == "" || projectTask.getStatus() == null) {
 				projectTask.setStatus("TO_DO");
 			}
-
 			// save Task
 			return projectTaskRepository.save(projectTask);
 		} catch (Exception e) {
@@ -56,18 +59,18 @@ public class ProjectTaskService {
 
 	public Iterable<ProjectTask> findBacklogById(String id) {
 
-		List<ProjectTask> projectTasks = projectTaskRepository.findByProjectIdentifierOrderByPriority(id.toUpperCase());
+		Project project = projectRepository.findByProjectIdentifier(id);
 
-		if (projectTasks.isEmpty()) {
+		if (project == null) {
 			throw new ProjectNotFoundException("Project with ID: '" + id + "' not found.");
 		}
 
-		return projectTasks;
+		return projectTaskRepository.findByProjectIdentifierOrderByPriority(id);
 	}
 
 	public ProjectTask findBacklogByProjectSequence(String backlodId, String id) {
 		// if backlog_id exist
-		Backlog backlog = backlogRepository.findByProjectIdentifier(backlodId);
+		Backlog backlog = backlogRepository.findByProjectIdentifier(backlodId.toUpperCase());
 		if (backlog == null)
 			throw new ProjectNotFoundException("Project with ID: '" + backlodId + "' not found.");
 

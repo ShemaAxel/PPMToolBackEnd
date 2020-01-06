@@ -1,4 +1,4 @@
- package com.ppm.demo.domain;
+package com.ppm.demo.domain;
 
 import java.util.Date;
 
@@ -9,6 +9,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
@@ -18,44 +19,49 @@ import javax.validation.constraints.Size;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-@Entity 
+@Entity
 public class Project {
 
 	@Id
-	@GeneratedValue(strategy =GenerationType.IDENTITY)
-	private Long id;  
-	@NotBlank(message ="Project name is required")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+	@NotBlank(message = "Project name is required")
 	private String projectName;
-	@NotBlank(message ="Project Identifier is required")
-	@Size(min=4,max=5,message="Please use 4 to 5 characters")
-	@Column(updatable=false,unique=true)
+	@NotBlank(message = "Project Identifier is required")
+	@Size(min = 4, max = 5, message = "Please use 4 to 5 characters")
+	@Column(updatable = false, unique = true)
 	private String projectIdentifier;
-	@NotBlank(message ="Project description is required")
+	@NotBlank(message = "Project description is required")
 	private String description;
-	@JsonFormat(pattern="yyyy-mm-dd")
+	@JsonFormat(pattern = "yyyy-mm-dd")
 	private Date start_date;
-	@JsonFormat(pattern="yyyy-mm-dd")
+	@JsonFormat(pattern = "yyyy-mm-dd")
 	private Date end_date;
-	 
-	@JsonFormat(pattern="yyyy-mm-dd")
+
+	@JsonFormat(pattern = "yyyy-mm-dd")
+	@Column(updatable = false)
 	private Date created_At;
-	@JsonFormat(pattern="yyyy-mm-dd")
+	@JsonFormat(pattern = "yyyy-mm-dd")
 	private Date updated_At;
-	
-	//Relationship
-	//cascade meaning project project is the owning side of the backlog,delete project all backlog are gone
-	//infinite recursin for json request
-	@OneToOne(fetch =FetchType.EAGER,cascade=CascadeType.ALL,mappedBy="project")
-	@JsonIgnore//in order to not have all the sub-entities that depends on this entity
+
+	// Relationship
+	// cascade meaning project project is the owning side of the backlog,delete
+	// project all backlog are gone
+	// infinite recursin for json request
+	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "project")
+	@JsonIgnore // in order to not have all the sub-entities that depends on this entity
 	private Backlog backlog;
-	
-	
-	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonIgnore
+	private User user;
+
+	private String projectLeader;
+
 	@PrePersist
 	public void onCreate() {
-		this.created_At= new Date();
+		this.created_At = new Date();
 	}
-	
+
 	@PreUpdate
 	public void onUpdate() {
 		this.updated_At = new Date();
@@ -136,7 +142,21 @@ public class Project {
 	public void setBacklog(Backlog backlog) {
 		this.backlog = backlog;
 	}
-	
-	
-	
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public String getProjectLeader() {
+		return projectLeader;
+	}
+
+	public void setProjectLeader(String projectLeader) {
+		this.projectLeader = projectLeader;
+	}
+
 }

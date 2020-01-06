@@ -2,7 +2,6 @@ package com.ppm.demo.domain;
 
 import java.util.Date;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -22,7 +21,7 @@ public class ProjectTask {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@Column(updatable = false,unique=true)
+	@Column(updatable = false, unique = true)
 	private String projectSequence;
 	@NotBlank(message = "Please include a project summary")
 	private String summary;
@@ -36,8 +35,8 @@ public class ProjectTask {
 
 	// ManytoOne
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name="backlog_id",updatable=false,nullable=false)
-	@JsonIgnore//again to not have endless recursion('Bad String{Error}')
+	@JoinColumn(name = "backlog_id", updatable = false, nullable = false)
+	@JsonIgnore // again to not have endless recursion('Bad String{Error}')
 	private Backlog backlog;
 
 	//

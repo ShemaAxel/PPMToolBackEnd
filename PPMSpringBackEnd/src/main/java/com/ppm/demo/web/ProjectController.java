@@ -1,5 +1,7 @@
 package com.ppm.demo.web;
 
+import java.security.Principal;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,14 +33,14 @@ public class ProjectController {
 	private MapValidationErrorService mapValidationErrorService;
 
 	@PostMapping("")
-	public ResponseEntity<?> createNewProject(@Valid @RequestBody Project project, BindingResult result) {
+	public ResponseEntity<?> createNewProject(@Valid @RequestBody Project project, BindingResult result,Principal principal) {
 
 		ResponseEntity<?> errorMap = mapValidationErrorService.MapValidationService(result);
 
 		if (errorMap != null)
 			return errorMap;
 
-		Project project1 = projectService.saveOrUpdateProject(project);
+		Project project1 = projectService.saveOrUpdateProject(project,principal.getName());
 		return new ResponseEntity<Project>(project1, HttpStatus.CREATED);
 	}
 	
@@ -56,7 +58,7 @@ public class ProjectController {
 	@DeleteMapping("/{projectId}")
 	public ResponseEntity<?> delete(@PathVariable String projectId){
 		projectService.deleteProjectByIdentifier(projectId);
-		return new ResponseEntity<String>("Porject with ID: '"+projectId.toUpperCase()+"' is Deleted.",HttpStatus.OK);
+		return new ResponseEntity<String>("Project with ID: '"+projectId.toUpperCase()+"' is Deleted.",HttpStatus.OK);
 	}
 	
 }
